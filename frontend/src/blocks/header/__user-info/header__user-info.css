@@ -1,0 +1,9 @@
+.header__user-info {
+    display: flex;
+    flex-direction: row;
+    column-gap: 24px;
+}
+
+.header__user-info .header__link {
+    color: #A9A9A9;
+}

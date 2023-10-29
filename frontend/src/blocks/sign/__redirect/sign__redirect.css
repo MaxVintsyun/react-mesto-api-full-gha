@@ -1,0 +1,16 @@
+.sign__redirect {
+    margin: 0;
+    padding: 0;
+    margin-top: 15px;
+    color: #FFF;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-decoration: none;
+    transition: opacity 0.2s linear;
+}
+
+.sign__redirect:hover {
+    opacity: 0.6;
+}
