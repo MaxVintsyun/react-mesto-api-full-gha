@@ -4,7 +4,7 @@ const apiOptions = {
 }
 
 const authOptions = {
-  baseUrl: 'https://auth.nomoreparties.co'
+  baseUrl: 'https://api.mvinmesto.nomoredomainsrocks.ru'
 }
 
 export { apiOptions, authOptions };
