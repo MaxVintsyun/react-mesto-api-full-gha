@@ -12,15 +12,22 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const urlRegex = require('./utils/constants');
 
 const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
+const corseAllowedOrigins = [
+  'http://mvinmesto.nomoredomainsrocks.ru',
+  'https://mvinmesto.nomoredomainsrocks.ru',
+];
 const app = express();
 
+app.use(cors({
+  origin: corseAllowedOrigins,
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 mongoose.connect(DB_URL);
-
-app.use(cors());
 
 app.use(requestLogger);
 
