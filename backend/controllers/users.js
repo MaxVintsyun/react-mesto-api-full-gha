@@ -95,18 +95,13 @@ module.exports.login = (req, res, next) => {
   if (email && password) {
     User.findUserByCredentials(email, password)
       .then((user) => {
-        const token = jwt.sign(
+        const authorizationToken = jwt.sign(
           { _id: user._id },
           NODE_ENV === 'production' ? JWT_SECRET : 'super-strong-secret',
           { expiresIn: '7d' },
         );
 
-        res.cookie('jwt', token, {
-          maxAge: 3600000 * 24 * 7,
-          httpOnly: true,
-          sameSite: true,
-        });
-        res.send({ message: 'Вы успешно авторизованы!' });
+        res.send({ token: authorizationToken });
       })
       .catch((err) => {
         next(new UnauthorizedError(err.message));

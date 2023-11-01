@@ -1,8 +1,8 @@
-import { authOptions } from "./utils";
+import { apiOptions } from "./utils";
 
 export class Auth {
-    constructor(authOptions) {
-        this._url = authOptions.baseUrl;
+    constructor(apiOptions) {
+        this._url = apiOptions.baseUrl;
     }
 
     _checkResponse(res) {
@@ -17,7 +17,6 @@ export class Auth {
         return fetch(`${this._url}/signup`, {
             method: 'POST',
             headers: {
-                'Accept': "application/json",
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({email, password})
@@ -29,7 +28,6 @@ export class Auth {
         return fetch(`${this._url}/signin`, {
             method: 'POST',
             headers: {
-                'Accept': "application/json",
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({email, password})
@@ -41,7 +39,6 @@ export class Auth {
         return fetch(`${this._url}/users/me`, {
             method: 'GET',
             headers: {
-                'Accept': 'application/json',
                 "Content-Type": "application/json",
                 "Authorization" : `Bearer ${userToken}`
             }
@@ -50,4 +47,4 @@ export class Auth {
     }
 }
 
-export const auth = new Auth(authOptions);
+export const auth = new Auth(apiOptions);
