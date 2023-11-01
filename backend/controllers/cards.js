@@ -15,7 +15,7 @@ function throwCardError(err) {
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.send({ data: cards }))
+    .then((cards) => res.send(cards))
     .catch((err) => next(throwCardError(err)));
 };
 
@@ -23,7 +23,7 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => res.status(201).send({ data: card }))
+    .then((card) => res.status(201).send(card))
     .catch((err) => next(throwCardError(err)));
 };
 
@@ -36,7 +36,7 @@ module.exports.deleteCard = (req, res, next) => {
       }
       return Card.findByIdAndRemove(req.params.cardId);
     })
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.status(200).send(card))
     .catch((err) => next(throwCardError(err)));
 };
 
@@ -47,7 +47,7 @@ module.exports.putLike = (req, res, next) => {
     { new: true },
   )
     .orFail(new Error('NotValidId'))
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send(card))
     .catch((err) => next(throwCardError(err)));
 };
 
@@ -58,6 +58,6 @@ module.exports.deleteLike = (req, res, next) => {
     { new: true },
   )
     .orFail(new Error('NotValidId'))
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send(card))
     .catch((err) => next(throwCardError(err)));
 };

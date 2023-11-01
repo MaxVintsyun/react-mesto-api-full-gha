@@ -3,7 +3,10 @@ import { apiOptions } from "./utils";
 export class Api {
     constructor(apiOptions) {
         this._url = apiOptions.baseUrl;
-        this._authorization = apiOptions.authorizationTokken;
+    }
+
+    _getToken() {
+        return `Bearer ${localStorage.getItem('jwt')}`;
     }
 
     _checkResponse(res) {
@@ -17,7 +20,7 @@ export class Api {
     getUserInfo() {
         return fetch(`${this._url}/users/me`, {
             headers: {
-                authorization: this._authorization
+                authorization: this._getToken()
             }
         })
         .then(res => this._checkResponse(res))
@@ -26,7 +29,7 @@ export class Api {
     getDefaultCards() {
         return fetch(`${this._url}/cards`, {
             headers: {
-                authorization: this._authorization
+                authorization: this._getToken()
             }
         })
         .then(res => this._checkResponse(res))
@@ -36,7 +39,7 @@ export class Api {
         return fetch(`${this._url}/users/me`, {
             method: 'PATCH',
             headers: {
-                authorization: this._authorization,
+                authorization: this._getToken(),
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -51,7 +54,7 @@ export class Api {
         return fetch(`${this._url}/cards`, {
             method: 'POST',
             headers: {
-                authorization: this._authorization,
+                authorization: this._getToken(),
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -66,7 +69,7 @@ export class Api {
         return fetch(`${this._url}/cards/${cardId}`, {
             method: 'DELETE',
             headers: {
-                authorization: this._authorization,
+                authorization: this._getToken(),
                 'Content-Type': 'application/json'
             }
         })
@@ -77,7 +80,7 @@ export class Api {
         return fetch(`${this._url}/cards/${cardId}/likes`, {
             method: isLiked ? 'PUT' : 'DELETE',
             headers: {
-                authorization: this._authorization,
+                authorization: this._getToken(),
                 'Content-Type': 'application/json'
             }
         })
@@ -88,7 +91,7 @@ export class Api {
         return fetch(`${this._url}/users/me/avatar`, {
             method: 'PATCH',
             headers: {
-                authorization: this._authorization,
+                authorization: this._getToken(),
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({

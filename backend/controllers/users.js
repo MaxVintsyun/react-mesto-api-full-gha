@@ -24,21 +24,21 @@ function throwUserError(err) {
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.send({ data: users }))
+    .then((users) => res.send(users))
     .catch((err) => next(throwUserError(err)));
 };
 
 module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail(new Error('NotValidId'))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => next(throwUserError(err)));
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(new Error('NotValidId'))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => next(throwUserError(err)));
 };
 
@@ -69,7 +69,7 @@ module.exports.updateUser = (req, res, next) => {
       upsert: true,
     },
   )
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => next(throwUserError(err)));
 };
 
@@ -85,7 +85,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
       upsert: true,
     },
   )
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => next(throwUserError(err)));
 };
 
