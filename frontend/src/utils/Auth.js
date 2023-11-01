@@ -35,12 +35,12 @@ export class Auth {
         .then(res => this._checkResponse(res));
     }
 
-    checkToken(userToken) {
+    checkToken() {
         return fetch(`${this._url}/users/me`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization" : `Bearer ${userToken}`
+                "Authorization" : `Bearer ${localStorage.getItem('jwt')}`
             }
         })
         .then(res => this._checkResponse(res))

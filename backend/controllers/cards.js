@@ -29,6 +29,7 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
+    .populate('likes', 'owner')
     .orFail(new Error('NotValidId'))
     .then((card) => {
       if (card.owner.toString() !== req.user._id) {
@@ -46,6 +47,7 @@ module.exports.putLike = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
+    .populate('likes', 'owner')
     .orFail(new Error('NotValidId'))
     .then((card) => res.send(card))
     .catch((err) => next(throwCardError(err)));
@@ -57,6 +59,7 @@ module.exports.deleteLike = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
+    .populate('likes', 'owner')
     .orFail(new Error('NotValidId'))
     .then((card) => res.send(card))
     .catch((err) => next(throwCardError(err)));
