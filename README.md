@@ -7,8 +7,8 @@
 
 ## Ссылки на проект
 
-IP-адрес: 158.160.69.13
+IP-адрес 158.160.69.13
 
-Frontend: https://mvinmesto.nomoredomainsrocks.ru/
+Frontend https://mvinmesto.nomoredomainsrocks.ru/
 
-Backend: https://api.mvinmesto.nomoredomainsrocks.ru/
+Backend https://api.mvinmesto.nomoredomainsrocks.ru/
