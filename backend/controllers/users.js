@@ -4,15 +4,11 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
-const UnauthorizedError = require('../errors/UnauthorizedError');
 const ConflictError = require('../errors/ConflictError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 function throwUserError(err) {
-  if (err.message === 'NotValidId') {
-    return new NotFoundError('Пользователь не найден');
-  }
   if (err.name === 'ValidationError' || err.name === 'CastError') {
     return new BadRequestError('Переданы некорректные данные');
   }
@@ -30,14 +26,14 @@ module.exports.getUsers = (req, res, next) => {
 
 module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId)
-    .orFail(new Error('NotValidId'))
+    .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => res.send(user))
     .catch((err) => next(throwUserError(err)));
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(new Error('NotValidId'))
+    .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => res.send(user))
     .catch((err) => next(throwUserError(err)));
 };
@@ -66,7 +62,6 @@ module.exports.updateUser = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-      upsert: true,
     },
   )
     .then((user) => res.send(user))
@@ -82,7 +77,6 @@ module.exports.updateUserAvatar = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-      upsert: true,
     },
   )
     .then((user) => res.send(user))
@@ -92,21 +86,17 @@ module.exports.updateUserAvatar = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
-  if (email && password) {
-    User.findUserByCredentials(email, password)
-      .then((user) => {
-        const authorizationToken = jwt.sign(
-          { _id: user._id },
-          NODE_ENV === 'production' ? JWT_SECRET : 'super-strong-secret',
-          { expiresIn: '7d' },
-        );
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const authorizationToken = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'super-strong-secret',
+        { expiresIn: '7d' },
+      );
 
-        res.send({ token: authorizationToken });
-      })
-      .catch((err) => {
-        next(new UnauthorizedError(err.message));
-      });
-  } else {
-    next(new BadRequestError('Одно из полей заполнено некорректно'));
-  }
+      res.send({ token: authorizationToken });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };

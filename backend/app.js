@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 const cors = require('cors');
@@ -24,8 +23,8 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 mongoose.connect(DB_URL);
@@ -59,13 +58,13 @@ app.use(auth);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.use(errorLogger);
-
-app.use(errors());
-
 app.use((req, res, next) => {
   next(new NotFoundError('Некорректный путь'));
 });
+
+app.use(errorLogger);
+
+app.use(errors());
 
 app.use(errorHandler);
 
