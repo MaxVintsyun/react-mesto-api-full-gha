@@ -4,9 +4,6 @@ const BadRequestError = require('../errors/BadRequestError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
 function throwCardError(err) {
-  if (err.message === 'NotValidId') {
-    return new NotFoundError('Карточка не найдена');
-  }
   if (err.name === 'ValidationError' || err.name === 'CastError') {
     return new BadRequestError('Переданы некорректные данные');
   }
@@ -29,7 +26,7 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
-    .orFail(new Error('NotValidId'))
+    .orFail(new NotFoundError('Карточка не найдена'))
     .then((card) => {
       if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Вы не являетесь владельцем карточки');
@@ -46,7 +43,7 @@ module.exports.putLike = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(new Error('NotValidId'))
+    .orFail(new NotFoundError('Карточка не найдена'))
     .then((card) => res.send(card))
     .catch((err) => next(throwCardError(err)));
 };
@@ -57,7 +54,7 @@ module.exports.deleteLike = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(new Error('NotValidId'))
+    .orFail(new NotFoundError('Карточка не найдена'))
     .then((card) => res.send(card))
     .catch((err) => next(throwCardError(err)));
 };
